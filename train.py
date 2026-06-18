@@ -1,7 +1,9 @@
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.callbacks import (
-    EarlyStopping, ReduceLROnPlateau, ModelCheckpoint)
+    EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, CSVLogger)
+from visualization import (save_training_history,
+                           save_confusion_matrix, save_classification_report)
 from config import Config
 
 
@@ -33,7 +35,10 @@ class Trainer:
                 save_best_only=True,
                 mode="min",
                 monitor="val_loss"
-            )
+            ),
+
+            CSVLogger('results/training_log.csv', append=True)
+
         ]
 
         history = self.model.fit(
@@ -44,6 +49,8 @@ class Trainer:
             batch_size=Config.BATCH_SIZE,
             callbacks=callbacks
         )
+
+        save_training_history(history)
 
         return history
 
@@ -60,15 +67,17 @@ class Trainer:
         )
 
         print("\nClassification Report")
-
-        print(
-            classification_report(
-                y_test,
-                y_pred,
-                target_names=label_encoder.classes_,
-                zero_division=0
-            )
+        report = classification_report(
+            y_test,
+            y_pred,
+            target_names=label_encoder.classes_,
+            zero_division=0
         )
+        print(report)
+
+        save_classification_report(report)
 
         print("\nConfusion Matrix")
         print(confusion_matrix(y_test, y_pred))
+
+        save_confusion_matrix(y_test, y_pred, label_encoder.classes_)
