@@ -28,6 +28,8 @@ def main():
     x_train, y_train = preprocessor.fit_transform(
         train_df)
 
+    preprocessor.save_preprocessors()
+
     x_val, y_val = preprocessor.transform(
         val_df)
 
