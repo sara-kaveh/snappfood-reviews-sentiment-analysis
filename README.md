@@ -1,381 +1,254 @@
-# Persian Emotion Classification using Deep Learning
+![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.10.1-FF6F00?logo=tensorflow&logoColor=white)
+![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-D00000?logo=keras&logoColor=white)
+![BiLSTM](https://img.shields.io/badge/Model-BiLSTM-success)
+[![Stars](https://img.shields.io/github/stars/sara-kaveh/snappfood-reviews-sentiment-analysis?style=social)](https://github.com/sara-kaveh/snappfood-reviews-sentiment-analysis)
 
-A deep learning project for **Persian emotion classification** using TensorFlow, Keras, and Hazm. The system preprocesses Persian text, applies data augmentation, and trains a Bidirectional LSTM network to classify emotions into sentiment categories.
+# SnappFood Reviews Sentiment Analysis using Bidirectional LSTM
 
----
-
-## Overview
-
-This project performs emotion classification on Persian text and maps fine-grained emotions into three sentiment classes:
-
-| Original Emotion | Sentiment |
-|------------------|-----------|
-| HAPPY | Positive |
-| SURPRISE | Positive |
-| SAD | Negative |
-| ANGRY | Negative |
-| HATE | Negative |
-| FEAR | Negative |
-| OTHER | Neutral |
-
-The model is trained using Bidirectional LSTM layers and evaluated with accuracy, precision, recall, F1-score, and confusion matrices.
+A deep learning project for **binary sentiment analysis of Persian user reviews** from the **SnappFood** dataset. It preprocesses Persian text, and trains a Bidirectional LSTM network. The final model achieves **86% test accuracy**.
 
 ---
 
 ## Features
 
-- Persian text normalization using Hazm
-- Emotion-to-sentiment mapping
-- Stratified train/validation/test splitting
-- Data augmentation for minority sentiment groups
-- Bidirectional LSTM architecture
-- Early stopping
-- Learning rate scheduling
-- Best model checkpointing
-- Prediction pipeline for new Persian sentences
-- Saved tokenizer and label encoder for inference
+* Persian text normalization using **Hazm**
+* Tokenization with TensorFlow/Keras
+* Bidirectional LSTM architecture
+* Early Stopping
+* ReduceLROnPlateau learning rate scheduling
+* Best model checkpointing
+* Saved tokenizer for inference
+* Performance visualization
 
 ---
 
 ## Dataset
 
-### Arman Text Emotion Dataset
+This project uses the **Cleaned SnappFood Persian Sentiment Analysis Dataset** available on Kaggle.
 
-GitHub Repository:
+The dataset contains approximately **65,973** Persian user reviews collected from the SnappFood platform.
 
-https://github.com/Arman-Rayan-Sharif/arman-text-emotion
+Each review is labeled as:
 
-After preprocessing, emotions are mapped into:
-
-- Positive
-- Neutral
-- Negative
+* Positive
+* Negative
 
 ---
 
-## Data Cleaning
+## Data Preprocessing
 
-The original dataset was cleaned using `clean_data.py`.
-
-Cleaning steps included:
-
-- Removing null and empty samples
-- Removing duplicate entries
-- Normalizing formatting issues
-- Exporting cleaned train file
-
-Generated file:
-
-- `cleaned_train.tsv`
-
-### Notes
-
-The cleaning process produced a cleaned training file (`cleaned_train.tsv`) and a cleaned test file. However, the cleaning procedure did not modify any samples in the original test set, so the final experiments used the original `test.tsv` file while training was performed on the cleaned training data.
-
----
-
-## Preprocessing
+Before training, the dataset undergoes several preprocessing steps.
 
 ### Text Normalization
 
-Hazm Normalizer is used to:
+Persian text is normalized using **Hazm**, including:
 
-- Normalize Persian characters
-- Standardize spacing
-- Clean textual inconsistencies
+* Character normalization
+* Standardizing Persian/Arabic characters
+* Removing unnecessary spaces
+* Cleaning formatting inconsistencies
 
 ### Tokenization
 
-Keras Tokenizer configuration:
+The cleaned text is converted into integer sequences using the Keras Tokenizer.
 
-- Vocabulary size: 11,000
-- OOV token support enabled
+Configuration:
 
-### Sequence Processing
+* Vocabulary Size: **15,000**
+* OOV token enabled
 
-- Maximum sequence length: 70
-- Post-padding
-- Post-truncation
+### Sequence Padding
 
----
+Since reviews have different lengths, sequences are padded to a fixed size.
 
-## Data Augmentation
-
-Custom augmentation is applied only to training data.
-
-### Random Deletion
-
-Randomly removes a small percentage of words from longer sentences.
-
-**Purpose:**
-
-- Improve robustness
-- Reduce memorization
-- Increase training diversity
+* Maximum sequence length: **40**
+* Post-padding
+* Post-truncation
 
 ---
 
 ## Model Architecture
 
 ```text
-Embedding Layer (11000, 256)
-        ↓
+Input Text
+      │
+Embedding (15000, 128)
+      │
+Bidirectional LSTM (128)
+      │
 Bidirectional LSTM (64)
-        ↓
-Bidirectional LSTM (32)
-        ↓
-Dense (32, ReLU)
-        ↓
+      │
+Dense (64, ReLU)
+      │
 Dropout (0.5)
-        ↓
-Softmax Output
+      │
+Dense (2, Softmax)
 ```
 
 ---
 
 ## Hyperparameters
 
-| Parameter | Value |
-|------------|---------|
-| Embedding Dimension | 256 |
-| LSTM Units | 64, 32 |
-| Batch Size | 32 |
-| Learning Rate | 0.001 |
-| Epochs | 30 |
-| Maximum Sequence Length | 70 |
-| Vocabulary Size | 11,000 |
+| Parameter               |   Value |
+| ----------------------- | ------: |
+| Vocabulary Size         |  15,000 |
+| Maximum Sequence Length |      40 |
+| Embedding Dimension     |     128 |
+| BiLSTM Units            | 128, 64 |
+| Dense Units             |      64 |
+| Dropout                 |     0.5 |
+| Batch Size              |      64 |
+| Learning Rate           |   0.001 |
+| Epochs                  |      10 |
+| Optimizer               |    Adam |
 
 ---
 
 ## Training Strategy
 
+The model was trained using several techniques to improve convergence and reduce overfitting.
+
 ### Early Stopping
 
-Monitor:
+* Monitor: Validation Loss
+* Patience: 5
 
-- Validation Loss (`val_loss`)
+### Learning Rate Scheduling
 
-Patience:
+ReduceLROnPlateau automatically decreases the learning rate when validation performance stops improving.
 
-- 10 epochs
+### Model Checkpoint
 
-### Learning Rate Reduction
-
-ReduceLROnPlateau:
-
-- Factor: 0.5
-- Patience: 3
-
-### Model Checkpointing
-
-Automatically saves the model with the best validation loss.
+The best-performing model is automatically saved according to validation loss.
 
 ---
 
-## Final Results
+## Results
 
 ### Test Performance
 
-| Metric | Value |
-|----------|----------|
-| Accuracy | 64% |
-| Macro F1 | 60% |
+| Metric          |   Score |
+| --------------- | ------: |
+| Accuracy        | **86%** |
+| Macro Precision | **86%** |
+| Macro Recall    | **86%** |
+| Macro F1-score  | **86%** |
+
+---
 
 ### Classification Report
 
-| Class | Precision | Recall | F1-score |
-|---------|---------|---------|---------|
-| Negative | 0.67 | 0.82 | 0.74 |
-| Neutral | 0.54 | 0.49 | 0.52 |
-| Positive | 0.68 | 0.45 | 0.54 |
+The trained model achieved balanced performance across both sentiment classes, demonstrating strong precision and recall for both positive and negative reviews.
+
+| Class | Precision | Recall | F1-score | Support |
+|---------|---------:|------:|--------:|--------:|
+| Negative | 0.84 | 0.88 | 0.86 | 4,845 |
+| Positive | 0.88 | 0.84 | 0.86 | 5,051 |
+| **Accuracy** | | | **0.86** | **9,896** |
+| **Macro Avg** | **0.86** | **0.86** | **0.86** | **9,896** |
+| **Weighted Avg** | **0.86** | **0.86** | **0.86** | **9,896** |
+
+#### Observations
+
+- The model achieved an overall **test accuracy of 86%**.
+- Performance is well balanced across both sentiment classes, with identical **F1-scores (0.86)** for Positive and Negative reviews.
+- The **Negative** class obtained a slightly higher **recall (0.88)**, indicating that the model successfully identifies most negative reviews.
+- The **Positive** class achieved a higher **precision (0.88)**, meaning positive predictions are highly reliable.
+- The similar macro and weighted averages suggest that the model generalizes consistently across the dataset without a strong bias toward either class.
+
+---
+
+### Training Curves
+
+The repository includes:
+
+* Training Accuracy
+* Validation Accuracy
+* Training Loss
+* Validation Loss
+
+These plots illustrate the convergence behavior of the model throughout training.
+
+<p align="center">
+  <img src="results/training_curves_20260622_103135.png" width="1000">
+</p>
+
+---
+
+### Learning Rate Schedule
+
+The repository also includes the learning rate schedule generated during training.
+
+<p align="center">
+  <img src="results/lr_20260622_103135.png" width="600">
+</p>
+
+---
 
 ### Confusion Matrix
 
-![Confusion Matrix](results/confusion_matrix.png)
+The confusion matrix provides a detailed view of prediction performance on the test set.
 
+<p align="center">
+  <img src="results/confusion_matrix_20260622_103148.png" width="600">
+</p>
+
+---
+
+### Training Log
+
+Training history is available, including:
+
+| Epoch | Train Accuracy | Train Loss | Learning Rate | Validation Accuracy | Validation Loss |
+|------:|---------------:|-----------:|--------------:|--------------------:|----------------:|
+| 0 | 83.21% | 0.3761 | 0.0010 | 85.83% | 0.3278 |
+| 1 | 87.78% | 0.2946 | 0.0010 | 86.01% | 0.3387 |
+| 2 | 89.58% | 0.2551 | 0.0010 | 85.44% | 0.3503 |
+| 3 | 90.92% | 0.2233 | 0.0010 | 85.50% | 0.4016 |
+| 4 | 93.01% | 0.1755 | 0.0005 | 85.16% | 0.4534 |
+| 5 | 93.88% | 0.1551 | 0.0005 | 84.64% | 0.4979 |
 ---
 
 ## Example Predictions
 
-| Input | Prediction |
-|---------|------------|
-| خیلی خوشحال شدم | Positive |
-| از این اتفاق عصبانی هستم | Negative |
-| زیاد خوب نبود | Neutral |
-
----
-
-## Application Demo
-
-![GUI Demo](results/gui_demo.png)
-
----
-
-## Experiments and Optimization
-
-Several experiments were conducted to improve model performance and reduce overfitting.
-
-### Official Dataset Split vs Custom Stratified Split
-
-The original ArmanEmo train/test split was evaluated first.
-
-**Result:**
-- Accuracy: approximately **45%**
-- Poor generalization across sentiment classes
-
-To improve class balance and evaluation stability, the train and test files were merged and re-split using stratified sampling based on sentiment categories.
-
-**Result:**
-- Accuracy improved to **64%**
-- Macro F1 improved to **60%**
-
-### Dataset Split Experiments
-
-Multiple train/validation/test ratios were tested:
-
-- 85 / 15 split
-- 80 / 20 split
-- Official dataset split
-
-The final model used a **85/15 split**, providing additional training samples and improving overall performance.
-
-### Class Weighting
-
-Class weights were tested to compensate for class imbalance.
-
-**Result:**
-
-- Improved recall for minority classes
-- Reduced overall accuracy
-- Reduced prediction confidence
-- Increased confusion between sentiment classes
-
-The final model was trained **without class weights**.
-
-### Data Augmentation
-
-Several augmentation approaches were evaluated:
-
-- Random word deletion
-- Random word swapping
-- Character repetition noise
-
-Random word deletion produced the most stable results and was retained in the final version.
-
-Augmentation was applied only to:
-- Positive samples
-- Neutral samples
-
-Negative samples were left unchanged because they already dominated the dataset.
-
-### Regularization Tuning
-
-Multiple dropout values were tested, The final architecture uses a dropout rate of **0.5** to reduce overfitting.
-
-### Label Smoothing
-
-**Experiment:** `label_smoothing=0.1`
-
-**Result:**
-- Reduced prediction confidence
-- No meaningful improvement in Macro F1
-
-The technique was not included in the final model.
-
-### SpatialDropout1D
-
-**Experiment:** `SpatialDropout1D(0.3)` after the embedding layer.
-
-**Result:**
-- No measurable improvement
-- Slight reduction in validation performance
-
-The layer was removed from the final architecture.
-
----
-
-## Key Findings
-
-- Official dataset split achieved approximately 45% accuracy.
-- Additional training data improved performance more than class weighting.
-- Validation loss was a better checkpoint metric than validation accuracy.
-- Simple augmentation techniques helped reduce overfitting.
-- The model still struggles most with distinguishing Neutral and Positive sentiments.
-- Contextual embeddings such as FastText or ParsBERT are likely to improve performance further.
-
----
-
-## Technologies Used
-
-- Python
-- TensorFlow
-- Keras
-- NumPy
-- Pandas
-- Scikit-Learn
-- Hazm
-- Joblib
+| Persian Review                     | Prediction |
+| ---------------------------------- | ---------- |
+| کیفیت غذا عالی بود                 | Positive   |
+| ارسال خیلی دیر انجام شد            | Negative   |
+| دوباره از این رستوران سفارش می‌دهم | Positive   |
+| غذا سرد و بی‌کیفیت بود             | Negative   |
 
 ---
 
 ## Project Structure
 
 ```text
-├── main.py
+├── data/
+│   └── cleaned_snappfood.csv
+├── models/
+│   └── best_model.keras
+├── results/
+│   ├── classification_report.txt
+│   ├── confusion_matrix.png
+│   ├── learning_rate_schedule.png
+│   ├── training_curves.png
+│   └── training_log.csv
 ├── config.py
+├── data_preprocessing.py
+├── main.py
 ├── models.py
 ├── train.py
 ├── predict.py
-├── augmentation.py
-├── data_preprocessing.py
-├── clean_data.py
 ├── visualization.py
-├── inference.py
 ├── requirements.txt
-├── data/
-│   ├── test.tsv
-│   ├── train.tsv
-│   └── cleaned_train.tsv.tsv
-├── models/
-│   ├── best_model.keras
-│   ├── tokenizer.pkl
-│   └── label_encoder.pkl
-├── results/
-│   ├── gui_demo.png
-│   └── confusion_matrix.png
 └── README.md
 ```
 
 ---
 
-## Future Improvements
-
-Potential future work:
-
-- FastText embeddings
-- ParsBERT fine-tuning
-- Transformer-based architectures
-
----
-
-## Dataset Citation
-
-This project uses the ArmanEmo dataset:
-
-**ArmanEmo: A Persian Dataset for Text-based Emotion Detection** (2022).
-
-Authors: Mirzaee, Hossein and Peymanfard, Javad and Moshtaghin, Hamid Habibzadeh and Zeinali, Hossein
-
-Paper: https://arxiv.org/abs/2207.11808
-
-If you use the dataset in academic research, please cite the original publication.
-
----
-
 ## Author
 
-**Sara kaveh**
-
-Computer Science Student focused on Machine Learning, Deep Learning, and Natural Language Processing.
+**Sara Kaveh**
 
 GitHub: https://github.com/sara-kaveh
