@@ -2,11 +2,12 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.10.1-FF6F00?logo=tensorflow&logoColor=white)
 ![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-D00000?logo=keras&logoColor=white)
 ![BiLSTM](https://img.shields.io/badge/Model-BiLSTM-success)
+![NLP](https://img.shields.io/badge/Task-Sentiment%20Analysis-purple)
 [![Stars](https://img.shields.io/github/stars/sara-kaveh/snappfood-reviews-sentiment-analysis?style=social)](https://github.com/sara-kaveh/snappfood-reviews-sentiment-analysis)
 
 # SnappFood Reviews Sentiment Analysis using Bidirectional LSTM
 
-A deep learning project for **binary sentiment analysis of Persian user reviews** from the **SnappFood** dataset. It preprocesses Persian text, and trains a Bidirectional LSTM network. The final model achieves **86% test accuracy**.
+A deep learning project for **binary sentiment analysis of Persian user reviews** from the **SnappFood** dataset. It applies Persian text normalization and tokenization before training a Bidirectional LSTM classifier.
 
 ---
 
@@ -29,12 +30,30 @@ This project uses the **Cleaned SnappFood Persian Sentiment Analysis Dataset** a
 
 [Kaggle - Cleaned SnappFood Persian Sentiment Analysis Dataset](https://www.kaggle.com/datasets/mohammad1ziyar/cleaned-snappfood-persian-sentiment-analysis)
 
-The dataset contains approximately **65,973** Persian user reviews collected from the SnappFood platform.
+The dataset contains approximately 66K Persian user reviews before preprocessing.
 
 Each review is labeled as:
 
 * Positive
 * Negative
+
+---
+
+### Dataset Split
+
+The dataset was divided using stratified sampling:
+
+<div align="center">
+
+| Split | Percentage |
+|---|---:|
+| Training | 72.25% |
+| Validation | 12.75% |
+| Testing | 15% |
+
+</div>
+
+Stratification was applied to preserve the class distribution.
 
 ---
 
@@ -50,6 +69,8 @@ Persian text is normalized using **Hazm**, including:
 * Standardizing Persian/Arabic characters
 * Removing unnecessary spaces
 * Cleaning formatting inconsistencies
+
+Although the dataset was pre-cleaned, Hazm normalization was applied to ensure consistent Persian character representation during training and inference.
 
 ### Tokenization
 
@@ -76,18 +97,25 @@ Since reviews have different lengths, sequences are padded to a fixed size.
 
 <pre>
 Input Text
-      │
-Embedding (15000, 128)
-      │
-Bidirectional LSTM (128)
-      │
-Bidirectional LSTM (64)
-      │
+     │
+Hazm Normalization
+     │
+Keras Tokenizer
+     │
+Padding (Length=40)
+     │
+Embedding
+(Vocabulary=15000, Dimension=128)
+     │
+Bidirectional LSTM (128, dropout=0.2)
+     │
+Bidirectional LSTM (64, dropout=0.2)
+     │
 Dropout (0.5)
-      │
+     │
 Dense (64, ReLU)
-      │
-Dense (2, Softmax)
+     │
+Softmax Output (2 classes)
 </pre>
 
 </div>
@@ -153,7 +181,7 @@ The best-performing model is automatically saved according to validation loss.
 
 ### Classification Report
 
-The trained model achieved balanced performance across both sentiment classes, demonstrating strong precision and recall for both positive and negative reviews.
+The model achieved consistent performance across both sentiment classes, showing that it learned meaningful sentiment patterns from Persian reviews.
 
 <div align="center">
 
@@ -237,12 +265,13 @@ Training history is available, including:
 
 <div align="center">
 
-| Persian Review                     | Prediction |
-| ---------------------------------- | ---------- |
-| کیفیت غذا عالی بود                 | Positive   |
-| ارسال خیلی دیر انجام شد            | Negative   |
-| دوباره از این رستوران سفارش می‌دهم | Positive   |
-| غذا سرد و بی‌کیفیت بود             | Negative   |
+| Confidence | Prediction | Persian Review |
+|-----------:|:----------:|:--------------|
+| 99.25% | Positive | کیفیت غذا عالی بود و خیلی خوشمزه بود |
+| 90.26% | Negative | غذا سرد رسید و اصلا کیفیت خوبی نداشت |
+| 95.87% | Positive | ارسال خیلی سریع بود و از سفارش راضی هستم |
+| 95.40% | Negative | بدترین تجربه‌ای بود که داشتم، دوباره سفارش نمی‌دهم |
+| 74.36% | Negative | غذا معمولی بود، نه خوب نه بد |
 
 </div>
 
@@ -254,6 +283,8 @@ Training history is available, including:
 ├── data/
 │   └── cleaned_snappfood.csv
 ├── models/
+│   ├── label_encoder.pkl
+│   ├── tokenizer.pkl
 │   └── best_model.keras
 ├── results/
 │   ├── classification_report.txt
@@ -263,6 +294,7 @@ Training history is available, including:
 │   └── training_log.csv
 ├── config.py
 ├── data_preprocessing.py
+├── inference.py
 ├── main.py
 ├── models.py
 ├── train.py
