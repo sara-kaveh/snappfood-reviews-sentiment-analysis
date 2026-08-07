@@ -70,6 +70,8 @@ Since reviews have different lengths, sequences are padded to a fixed size.
 
 ## Model Architecture
 
+<div align="center">
+
 ```text
 Input Text
       │
@@ -86,9 +88,13 @@ Dropout (0.5)
 Dense (2, Softmax)
 ```
 
+</div>
+
 ---
 
 ## Hyperparameters
+
+<div align="center">
 
 | Parameter               |   Value |
 | ----------------------- | ------: |
@@ -102,6 +108,8 @@ Dense (2, Softmax)
 | Learning Rate           |   0.001 |
 | Epochs                  |      10 |
 | Optimizer               |    Adam |
+
+</div>
 
 ---
 
@@ -128,18 +136,24 @@ The best-performing model is automatically saved according to validation loss.
 
 ### Test Performance
 
-| Metric          |   Score |
-| --------------- | ------: |
+<div align="center">
+
+| Metric          | Score |
+| --------------- | :---: |
 | Accuracy        | **86%** |
 | Macro Precision | **86%** |
 | Macro Recall    | **86%** |
 | Macro F1-score  | **86%** |
+
+</div>
 
 ---
 
 ### Classification Report
 
 The trained model achieved balanced performance across both sentiment classes, demonstrating strong precision and recall for both positive and negative reviews.
+
+<div align="center">
 
 | Class | Precision | Recall | F1-score | Support |
 |---------|---------:|------:|--------:|--------:|
@@ -148,6 +162,8 @@ The trained model achieved balanced performance across both sentiment classes, d
 | **Accuracy** | | | **0.86** | **9,896** |
 | **Macro Avg** | **0.86** | **0.86** | **0.86** | **9,896** |
 | **Weighted Avg** | **0.86** | **0.86** | **0.86** | **9,896** |
+
+</div>
 
 #### Observations
 
@@ -200,6 +216,8 @@ The confusion matrix provides a detailed view of prediction performance on the t
 
 Training history is available, including:
 
+<div align="center">
+
 | Epoch | Train Accuracy | Train Loss | Learning Rate | Validation Accuracy | Validation Loss |
 |------:|---------------:|-----------:|--------------:|--------------------:|----------------:|
 | 0 | 83.21% | 0.3761 | 0.0010 | 85.83% | 0.3278 |
@@ -208,9 +226,14 @@ Training history is available, including:
 | 3 | 90.92% | 0.2233 | 0.0010 | 85.50% | 0.4016 |
 | 4 | 93.01% | 0.1755 | 0.0005 | 85.16% | 0.4534 |
 | 5 | 93.88% | 0.1551 | 0.0005 | 84.64% | 0.4979 |
+
+</div>
+
 ---
 
 ## Example Predictions
+
+<div align="center">
 
 | Persian Review                     | Prediction |
 | ---------------------------------- | ---------- |
@@ -218,6 +241,8 @@ Training history is available, including:
 | ارسال خیلی دیر انجام شد            | Negative   |
 | دوباره از این رستوران سفارش می‌دهم | Positive   |
 | غذا سرد و بی‌کیفیت بود             | Negative   |
+
+</div>
 
 ---
 
