@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from hazm import Normalizer
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -84,6 +85,8 @@ class DataPreprocessor:
 
     def save_preprocessors(self):
 
+        os.makedirs("models", exist_ok=True)
+
         joblib.dump(
             self.tokenizer,
             Config.TOKENIZER_PATH
@@ -93,3 +96,5 @@ class DataPreprocessor:
             self.label_encoder,
             Config.LABEL_ENCODER_PATH
         )
+
+        print("Preprocessors saved successfully.")
