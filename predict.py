@@ -44,9 +44,10 @@ class Predictor:
 
             results.append({
                 "text": text,
-                "label": self.label_encoder.inverse_transform(
-                    [predicted_class]
-                )[0],
+                "label": (
+                    "Positive"
+                    if predicted_class == 1
+                    else "Negative"),
                 "confidence": float(np.max(pred))
             })
 
