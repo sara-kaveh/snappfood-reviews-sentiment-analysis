@@ -72,7 +72,7 @@ Since reviews have different lengths, sequences are padded to a fixed size.
 
 <div align="center">
 
-```text
+<pre>
 Input Text
       │
 Embedding (15000, 128)
@@ -86,7 +86,7 @@ Dense (64, ReLU)
 Dropout (0.5)
       │
 Dense (2, Softmax)
-```
+</pre>
 
 </div>
 
