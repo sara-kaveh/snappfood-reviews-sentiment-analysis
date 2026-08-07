@@ -25,7 +25,9 @@ A deep learning project for **binary sentiment analysis of Persian user reviews*
 
 ## Dataset
 
-This project uses the **Cleaned SnappFood Persian Sentiment Analysis Dataset** available on Kaggle.
+This project uses the **Cleaned SnappFood Persian Sentiment Analysis Dataset** available on Kaggle:
+
+[Kaggle - Cleaned SnappFood Persian Sentiment Analysis Dataset](https://www.kaggle.com/datasets/mohammad1ziyar/cleaned-snappfood-persian-sentiment-analysis)
 
 The dataset contains approximately **65,973** Persian user reviews collected from the SnappFood platform.
 
@@ -81,9 +83,9 @@ Bidirectional LSTM (128)
       │
 Bidirectional LSTM (64)
       │
-Dense (64, ReLU)
-      │
 Dropout (0.5)
+      │
+Dense (64, ReLU)
       │
 Dense (2, Softmax)
 </pre>
