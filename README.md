@@ -283,7 +283,6 @@ Training history is available, including:
 ├── data/
 │   └── cleaned_snappfood.csv
 ├── models/
-│   ├── label_encoder.pkl
 │   ├── tokenizer.pkl
 │   └── best_model.keras
 ├── results/
