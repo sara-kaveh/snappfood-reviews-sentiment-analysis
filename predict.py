@@ -7,10 +7,9 @@ from config import Config
 
 class Predictor:
 
-    def __init__(self, model_path, tokenizer, label_encoder):
+    def __init__(self, model_path, tokenizer):
         self.model = load_model(model_path, compile=False)
         self.tokenizer = tokenizer
-        self.label_encoder = label_encoder
         self.normalizer = Normalizer()
 
     def predict_batch(self, texts):
