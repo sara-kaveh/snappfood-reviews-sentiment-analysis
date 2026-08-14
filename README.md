@@ -3,7 +3,7 @@
 ![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-D00000?logo=keras&logoColor=white)
 ![BiLSTM](https://img.shields.io/badge/Model-BiLSTM-success)
 ![NLP](https://img.shields.io/badge/Task-Sentiment%20Analysis-purple)
-[![Stars](https://img.shields.io/github/stars/sara-kaveh/snappfood-reviews-sentiment-analysis?style=social)](https://github.com/sara-kaveh/snappfood-reviews-sentiment-analysis)
+[![Stars](https://img.shields.io/github/stars/sara-kaveh/snappfood-reviews-sentiment-analysis?style=social)](https://github.com/sara-kaveh/snappfood-reviews-sentiment-analysis/stargazers)
 
 # SnappFood Reviews Sentiment Analysis using Bidirectional LSTM
 
