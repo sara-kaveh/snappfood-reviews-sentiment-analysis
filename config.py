@@ -2,7 +2,7 @@ class Config:
 
     DATASET_PATH = "data/cleaned_snappfood.csv"
 
-    MAX_FEATURES = 1000
+    MAX_FEATURES = 15000
 
     MAX_LENGTH = 40
 
