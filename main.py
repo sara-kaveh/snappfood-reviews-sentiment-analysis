@@ -1,5 +1,4 @@
 from sklearn.model_selection import train_test_split
-import pandas as pd
 from data_preprocessing import DataPreprocessor
 from models import TextClassifier
 from train import Trainer
@@ -51,8 +50,7 @@ def main():
 
     trainer.evaluate(
         x_test,
-        y_test,
-        preprocessor.label_encoder)
+        y_test)
 
 
 if __name__ == "__main__":
