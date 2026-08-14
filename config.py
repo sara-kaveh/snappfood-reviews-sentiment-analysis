@@ -2,7 +2,7 @@ class Config:
 
     DATASET_PATH = "data/cleaned_snappfood.csv"
 
-    MAX_FEATURES = 15000
+    MAX_FEATURES = 1000
 
     MAX_LENGTH = 40
 
@@ -19,7 +19,5 @@ class Config:
     MODEL_PATH = "models/best_model.keras"
 
     TOKENIZER_PATH = "models/tokenizer.pkl"
-
-    LABEL_ENCODER_PATH = "models/label_encoder.pkl"
 
     RANDOM_SEED = 42
