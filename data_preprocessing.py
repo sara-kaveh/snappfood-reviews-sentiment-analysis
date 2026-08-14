@@ -5,7 +5,6 @@ import os
 from hazm import Normalizer
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from sklearn.preprocessing import LabelEncoder
 from config import Config
 
 
@@ -13,7 +12,6 @@ class DataPreprocessor:
 
     def __init__(self):
         self.tokenizer = None
-        self.label_encoder = LabelEncoder()
         self.normalizer = Normalizer()
 
     def load_data(self, file_path):
@@ -35,9 +33,7 @@ class DataPreprocessor:
             for text in df["text"]
         ]
 
-        labels = df["label"].astype(int)
-
-        y = self.label_encoder.fit_transform(labels)
+        y = df["label"].astype(int).to_numpy()
 
         self.tokenizer = Tokenizer(
             num_words=Config.MAX_FEATURES,
@@ -66,9 +62,7 @@ class DataPreprocessor:
             for text in df["text"]
         ]
 
-        labels = df["label"].astype(int)
-
-        y = self.label_encoder.transform(labels)
+        y = df["label"].astype(int).to_numpy()
 
         sequences = self.tokenizer.texts_to_sequences(
             texts
@@ -92,9 +86,4 @@ class DataPreprocessor:
             Config.TOKENIZER_PATH
         )
 
-        joblib.dump(
-            self.label_encoder,
-            Config.LABEL_ENCODER_PATH
-        )
-
-        print("Preprocessors saved successfully.")
+        print("Tokenizer saved successfully.")
