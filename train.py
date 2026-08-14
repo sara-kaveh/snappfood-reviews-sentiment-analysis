@@ -1,9 +1,7 @@
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
-from tensorflow.keras.callbacks import (
-    EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, CSVLogger)
-from visualization import (save_training_history,
-                           save_confusion_matrix, save_classification_report)
+from tensorflow.keras.callbacks import (EarlyStopping, ReduceLROnPlateau, ModelCheckpoint, CSVLogger)
+from visualization import (save_training_history, save_confusion_matrix, save_classification_report)
 from config import Config
 
 
@@ -54,7 +52,7 @@ class Trainer:
 
         return history
 
-    def evaluate(self, x_test, y_test, label_encoder):
+    def evaluate(self, x_test, y_test):
 
         predictions = self.model.predict(
             x_test,
