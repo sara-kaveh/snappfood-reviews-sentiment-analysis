@@ -5,20 +5,15 @@ from config import Config
 
 def main():
 
-    # Load tokenizer and label encoder
+    # Load tokenizer
     tokenizer = joblib.load(
         Config.TOKENIZER_PATH
-    )
-
-    label_encoder = joblib.load(
-        Config.LABEL_ENCODER_PATH
     )
 
     # Initialize predictor
     predictor = Predictor(
         model_path=Config.MODEL_PATH,
-        tokenizer=tokenizer,
-        label_encoder=label_encoder
+        tokenizer=tokenizer
     )
 
     # Example reviews
