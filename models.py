@@ -1,6 +1,5 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import (
-    Embedding, Bidirectional, LSTM, Dense, Dropout)
+from tensorflow.keras.layers import (Embedding, Bidirectional, LSTM, Dense, Dropout)
 from tensorflow.keras.optimizers import Adam
 from config import Config
 
@@ -35,7 +34,7 @@ class TextClassifier:
                 activation="relu"),
 
             Dense(
-                2,
+                num_classes,
                 activation="softmax")
         ])
 
